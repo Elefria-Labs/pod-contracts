@@ -12,7 +12,9 @@ contract PoDNFT is ERC721URIStorage, Pausable, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    mapping(uint256 => uint256) public projectTokenIdMap;
+    mapping(bytes32 => uint256) public projectTokenIdMap;
+
+    mapping(bytes32 => address) public approvedProjectOwners;
 
     constructor() ERC721("Proof of Development", "PoD") {}
 
@@ -24,13 +26,20 @@ contract PoDNFT is ERC721URIStorage, Pausable, Ownable {
         _unpause();
     }
 
-    function safeMint(address to, uint256 projectId, string memory uri) public onlyOwner {
+    function approveProject(bytes32 projectIdHash, address owner) public onlyOwner {
+        approvedProjectOwners[projectIdHash]=owner;
+    }
+
+    function safeMint(address to, bytes32 projectIdHash, string memory uri) public onlyOwner {
+        require(approvedProjectOwners[projectIdHash]!=address(0),"Not approved");
+
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
-        projectTokenIdMap[projectId]=tokenId;
+        projectTokenIdMap[projectIdHash]=tokenId;
     }
+
  function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
         whenNotPaused

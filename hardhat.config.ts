@@ -13,6 +13,7 @@ import { config } from "./package.json"
 import KEYS from "./private.json"
 import "./tasks/deploy-box"
 import "./tasks/deploy-box-v2"
+import "./tasks/deploy-pod"
 // import { solidity } from "ethereum-waffle"
 // chai.use(solidity)
 // dotenvConfig({ path: resolve(__dirname, "./.env") })
@@ -35,6 +36,10 @@ function getNetworks(): NetworksUserConfig | undefined {
       url: chainConfig[selectedNetwork].mainnet.rpc[0],
       accounts,
       allowUnlimitedContractSize: true
+    },
+    hyperspace: {
+      url: "https://filecoin-calibration.chainup.net/rpc/v1",
+      accounts
     }
   }
 }
