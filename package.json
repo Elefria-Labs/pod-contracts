@@ -9,6 +9,7 @@
     "compile:pks": "ts-node scripts/compile-circuits-plonk.ts",
     "deploy:box": "hardhat deploy:box --network localhost",
     "deploy:boxv2": "hardhat deploy:boxv2 --network localhost",
+    "deploy:pod": "hardhat deploy:pod",
     "test": "hardhat test",
     "test:report-gas": "REPORT_GAS=true hardhat test",
     "test:coverage": "hardhat coverage",
@@ -67,7 +68,7 @@
   },
   "config": {
     "solidity": {
-      "version": "0.8.4",
+      "version": "0.8.17",
       "settings": {
         "optimizer": {
           "enabled": true,
