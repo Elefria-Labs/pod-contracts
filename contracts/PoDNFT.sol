@@ -16,6 +16,8 @@ contract PoDNFT is ERC721URIStorage, Pausable, Ownable {
 
     mapping(bytes32 => address) public approvedProjectOwners;
 
+    mapping(bytes32 => mapping(bytes32 => address)) public nftOwners;
+
     constructor() ERC721("Proof of Development", "PoD") {}
 
     function pause() public onlyOwner {
@@ -30,14 +32,16 @@ contract PoDNFT is ERC721URIStorage, Pausable, Ownable {
         approvedProjectOwners[projectIdHash]=owner;
     }
 
-    function safeMint(address to, bytes32 projectIdHash, string memory uri) public onlyOwner {
+    function safeMint(address to, bytes32 projectIdHash,bytes32 contributor, string memory uri) public onlyOwner {
         require(approvedProjectOwners[projectIdHash]!=address(0),"Not approved");
+        require(nftOwners[projectIdHash][contributor]==address(0),"Minted");
 
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         projectTokenIdMap[projectIdHash]=tokenId;
+        nftOwners[projectIdHash][contributor]=to;
     }
 
  function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
